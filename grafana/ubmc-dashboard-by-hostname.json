@@ -1,0 +1,690 @@
+{
+  "dashboard": {
+    "__inputs": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "description": "",
+        "type": "datasource",
+        "pluginId": "prometheus",
+        "pluginName": "Prometheus"
+      }
+    ],
+    "__elements": {},
+    "__requires": [
+      {
+        "type": "panel",
+        "id": "bargauge",
+        "name": "Bar gauge",
+        "version": ""
+      },
+      {
+        "type": "panel",
+        "id": "gauge",
+        "name": "Gauge",
+        "version": ""
+      },
+      {
+        "type": "grafana",
+        "id": "grafana",
+        "name": "Grafana",
+        "version": "9.4.3"
+      },
+      {
+        "type": "datasource",
+        "id": "prometheus",
+        "name": "Prometheus",
+        "version": "1.0.0"
+      },
+      {
+        "type": "panel",
+        "id": "stat",
+        "name": "Stat",
+        "version": ""
+      },
+      {
+        "type": "panel",
+        "id": "timeseries",
+        "name": "Time series",
+        "version": ""
+      }
+    ],
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": null,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "provprometheus"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "mappings": [],
+            "max": 100,
+            "min": 5,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "blue",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 22
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 60
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "celsius"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu1_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 1"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu2_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 2"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu3_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 3"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu4_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 4"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 9,
+          "x": 0,
+          "y": 0
+        },
+        "id": 2,
+        "options": {
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showThresholdLabels": false,
+          "showThresholdMarkers": true,
+          "text": {}
+        },
+        "pluginVersion": "9.4.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "provprometheus"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "redfish_temperature_reading_celsius{id=~\"midplane-gpu1_temp|midplane-gpu2_temp|midplane-gpu3_temp|midplane-gpu4_temp\",host=\"${Hostname}\"}",
+            "interval": "",
+            "legendFormat": "{{id}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "GPU Temperatures",
+        "type": "gauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "provprometheus"
+        },
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-BlYlRd"
+            },
+            "mappings": [],
+            "max": 15000,
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "#461e52",
+                  "value": null
+                },
+                {
+                  "color": "#7a98ee",
+                  "value": 5000
+                },
+                {
+                  "color": "#556cc9",
+                  "value": 10000
+                },
+                {
+                  "color": "#e68e35",
+                  "value": 12000
+                },
+                {
+                  "color": "#dd517e",
+                  "value": 14000
+                }
+              ]
+            },
+            "unit": "rotrpm"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 15,
+          "x": 9,
+          "y": 0
+        },
+        "id": 4,
+        "options": {
+          "displayMode": "lcd",
+          "minVizHeight": 10,
+          "minVizWidth": 0,
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "showUnfilled": true
+        },
+        "pluginVersion": "9.4.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "provprometheus"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "redfish_fan_speed_reading_rpm{host=\"${Hostname}\"}",
+            "interval": "",
+            "legendFormat": "{{id}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Fan Speed",
+        "type": "bargauge"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "provprometheus"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "smooth",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "celsius"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu1_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 1"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu2_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 2"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu3_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 3"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "midplane-gpu4_temp"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "GPU 4"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 12,
+          "x": 0,
+          "y": 7
+        },
+        "id": 8,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "provprometheus"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "redfish_temperature_reading_celsius{id=~\"midplane-gpu1_temp|midplane-gpu2_temp|midplane-gpu3_temp|midplane-gpu4_temp\",host=\"${Hostname}\"}",
+            "interval": "",
+            "legendFormat": "{{id}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "GPU Temperatures",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "provprometheus"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "smooth",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "watt"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "psu1"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "PSU 1"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "psu2"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "PSU 2"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "psu3"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "PSU 3"
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "psu4"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "PSU 4"
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 12,
+          "x": 12,
+          "y": 7
+        },
+        "id": 10,
+        "options": {
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "provprometheus"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "redfish_power_supply_last_power_output_watts{host=\"${Hostname}\"}",
+            "interval": "",
+            "legendFormat": "{{id}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Power Supply Output",
+        "type": "timeseries"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "provprometheus"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "continuous-BlPu"
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "volt"
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 24,
+          "x": 0,
+          "y": 17
+        },
+        "id": 6,
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull"
+            ],
+            "fields": "",
+            "values": false
+          },
+          "text": {},
+          "textMode": "auto"
+        },
+        "pluginVersion": "9.4.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "provprometheus"
+            },
+            "editorMode": "code",
+            "exemplar": true,
+            "expr": "redfish_voltage_reading_volts{host=\"${Hostname}\"}",
+            "interval": "",
+            "legendFormat": "{{id}}",
+            "range": true,
+            "refId": "A"
+          }
+        ],
+        "title": "Voltage Sensor Readings",
+        "type": "stat"
+      }
+    ],
+    "refresh": "",
+    "revision": 1,
+    "schemaVersion": 38,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {},
+          "datasource": {
+            "type": "prometheus",
+            "uid": "provprometheus"
+          },
+          "definition": "label_values(redfish_fan_speed_reading_rpm, host)",
+          "hide": 0,
+          "includeAll": false,
+          "multi": false,
+          "name": "Hostname",
+          "options": [],
+          "query": {
+            "query": "label_values(redfish_fan_speed_reading_rpm, host)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "U-BMC By Hostname",
+    "uid": "oss-ubmc-by-hostname",
+    "version": 7,
+    "weekStart": ""
+  }
+}

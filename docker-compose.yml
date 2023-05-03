@@ -1,0 +1,86 @@
+version: "3"
+
+# Define the network that the containers will be connected, which allows DNS
+# resolution between containers.
+networks:
+  grafana:
+
+# Define the containers that will be created and the configuration for each
+# container.
+services:
+
+  # The name "grafana" is the docker service name for the web interface used to
+  # visualize data sources.
+  grafana:
+    # Pull the latest grafana image from dockerhub
+    image: grafana/grafana:latest
+
+    ports:
+      # Expose the grafana port to the host (host port : container port).  You
+      # will use this port to access the grafana web interface from your browser
+      # (http://localhost:3000).
+      - 3000:3000
+
+    # This allows the grafana container to access the other containers by their
+    # service name using DNS resolution.  The "networks" below link this
+    # "grafana" container to the other containers in the docker-compose.yml
+    # file.
+    networks:
+      - grafana
+
+    # Uncomment the next lines to enable debug logging on the grafana container
+    # environment:
+      #- "GF_DEFAULT_APP_MODE=development"
+      #- "GF_LOG_LEVEL=debug"
+
+    # These volumes are used to persist data between container restarts and to
+    # configure grafana
+    volumes:
+      # Persist grafana data between container restarts (users, dashboards, api
+      # keys, etc).  The name of the persistent DB is "grafana.db" and it is
+      # stored in the ./grafana/data directory.
+      - ./grafana/data:/var/lib/grafana
+      # The file "grafana.ini" configures grafana.  We've changed the home
+      # dashboard to the oss-home.json dashboard.
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      # This mounts the oss-home.json to the grafana container at a location that
+      # grafana will look the home dashboard.
+      - ./grafana/oss-home.json:/usr/share/grafana/public/dashboards/oss-home.json
+      # This "prometheus.provision.yml" file configures Grafana to use the
+      # prometheus datasource using the "prometheus" service name.
+      - ./grafana/prometheus.provision.yml:/etc/grafana/provisioning/datasources/prometheus.provision.yml
+    # The container runs as root
+    user: "0"
+
+  # The "prometheus" service pulls data from the JSON exporter over HTTP, and
+  # stores it in a time series database.  Prometheus is used as a datasource
+  # for Grafana.
+  prometheus:
+    # Pull the prometheus image from dockerhub (v2.37.6 LTS)
+    image: prom/prometheus:v2.37.6
+    #  Note: the prometheus container will store data in the /prometheus
+    # directory which is mapped to a docker volume See the
+    # prom/prometheus:v2.37.6 dockerfile for more details
+    # (https://github.com/prometheus/prometheus/blob/main/Dockerfile).
+    volumes:
+      # Mount our configuration file to the location the executable will search
+      # for configuration.
+      - ./federate.yml:/etc/prometheus/federate.yml
+    command:
+      # Setup prometheus arguments to use the config file in the /etc/prometheus
+      # directory on the container.
+      - "--config.file=/etc/prometheus/federate.yml"
+      # The prometheus container will store data in the /prometheus directory on
+      # the host (a docker volume).
+      - "--storage.tsdb.path=/prometheus"
+      # The prometheus container will store data for 15 days by default.  This is
+      # the number of bytes that will be stored.
+      - "--storage.tsdb.retention.size=1GB"
+    ports:
+      # Expose the prometheus port to the host (host port : container port)
+      - 9090:9090
+    # "networks" link the prometheus container to the other containers in the
+    # docker-compose.yml file.  This allows the grafana container to access the
+    # other containers by their service name (DNS)
+    networks:
+      - grafana

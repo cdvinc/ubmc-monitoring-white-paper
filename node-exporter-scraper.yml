@@ -1,0 +1,29 @@
+# In this example configuration, we are specifying the Prometheus service
+# that will scrape metrics from the node exporter.  This node's usage of
+# Prometheus involves retrieving telemetry data from the local node and
+# persisting it in a time-series database on the node.  This data can be
+# utilized in another Prometheus instance that links with this one to offer a
+# global view of all the nodes and U-BMCs deployed on the network.
+
+global:
+  # This is the default scrape interval from the example.
+  scrape_interval: 15s
+
+scrape_configs:
+  # This job name will be used to identify the metrics scraped from this
+  # Prometheus instance in the global view. We use this job name to filter
+  # using the `match[]` query parameter in the federate.yml file.
+  - job_name: node
+
+    # This job is configured to scrape the node exporter target on the local
+    # node.
+    static_configs:
+      - targets: ['localhost:9100']
+
+  # We can add more jobs here, for instance if we scrape metrics from the
+  # NVidia GPU dcgm_exporter, we can add another job here to scrape that
+  # exporter.
+  #- job_name: 'dcgm'
+  #  scrape_interval: 15s
+  #  static_configs:
+  #    - targets: ['localhost:9400']

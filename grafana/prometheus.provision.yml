@@ -1,0 +1,17 @@
+apiVersion: 1
+
+# Configure Grafana to automatically add Prometheus as a datasource using
+# the Prometheus container name on the Docker network.
+datasources:
+  # The name of our datasource
+  - name: Prometheus
+    # The datasource type
+    type: prometheus
+    # The access mode must be proxy. This is the only mode supported by the Grafana container.
+    access: proxy
+    # The URL of the Prometheus server. This is the name of the Prometheus container on the Docker network.
+    # The port, 9090, is the default port for Prometheus.
+    url: http://prometheus:9090
+    # The identifier of the Prometheus datasource. This is used when creating dashboards to link to the datasource.
+    # When using the Grafana Dashboard API to create dashboards, this is the uid property.
+    uid: provprometheus

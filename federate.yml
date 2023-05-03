@@ -1,0 +1,87 @@
+# Here we define the Prometheus federation service that will be used to
+# scrape the metrics from the source Prometheus servers.  In this example, we
+# are using the Prometheus federation feature to scale to environments with a
+# large number of Prometheus servers.
+
+global:
+  scrape_interval: 60s
+  scrape_timeout: 30s
+
+scrape_configs:
+  # The global view of the edge network is created by scraping the metrics
+  # from the source Prometheus servers.  Using the Prometheus federation
+  # feature, this Prometheus server is configured to scrape metrics from
+  # another Prometheus server by using the `/federate` endpoint of the source
+  # Prometheus server.
+
+  # This job scrapes metrics from the U-BMC Prometheus server. We also need to
+  # create another job for the other Prometheus server on the node, but
+  # we will do that below this job.
+  - job_name: federate-u-bmcs
+    scrape_interval: 15s
+
+    honor_labels: true
+    metrics_path: /federate
+
+    # The `match[]` query parameter is used to filter the metrics that are
+    # scraped from the source Prometheus server.  In this example, we are
+    # filtering the metrics to only include those that have a `job` label
+    # that starts with `rf_json` (Redfish JSON metrics).
+    params:
+      'match[]':
+        - '{job=~"rf_json.*"}'
+
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    static_configs:
+
+      # This job is configured to scrape metrics from all the U-BMC
+      # Prometheus servers.  Add them to this list as they are deployed.
+      - targets:
+          - i-rigel1:9090
+          #- 'source-u-bmc2:9090'
+          #- 'source-u-bmc3:9090'
+
+    # Relabels the config to use the target's address as the host label (a
+    # query parameter in the URL like `?host=foo`). This will be important
+    # when we want to create dashboards for the global view and iterate
+    # through the list of metrics and display them all with one dashboard.
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '([^:]+)(?::\d+)?'
+        target_label: host
+        replacement: '${1}'
+
+    # Sets the `Authorization` header on every scrape request with the
+    # configured username and password.
+    # password and password_file are mutually exclusive.
+    basic_auth:
+      username: admin
+      password: admin
+      #password_file: <string>
+
+  # This job scrapes metrics from the node's Prometheus server(s) that
+  # are running on the node to gather metrics from the OS.
+  - job_name: federate-nodes
+    scrape_interval: 15s
+
+    honor_labels: true
+    metrics_path: /federate
+
+    # The `match[]` query parameter is used to filter the metrics that are
+    # scraped from the source Prometheus server.  In this example, we are
+    # filtering the metrics to only include those that have a `job` label
+    # that is equal to `node`.
+    params:
+      'match[]':
+        - '{job="node"}'
+        - '{job="dcgm"}'
+
+    static_configs:
+      - targets:
+          # This job is configured to scrape metrics from all the node
+          # Prometheus servers.  Add them to this list as they are deployed.
+          - rigel1:9090
+          #- 'source-node2:9090'
+          #- 'source-node3:9090'
